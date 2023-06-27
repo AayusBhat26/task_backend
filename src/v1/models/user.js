@@ -61,6 +61,10 @@ const userSchema = new mongoose.Schema(
       type: Number,
       default: 600,
     },
+    points:{
+      type: Number,
+      default: 0,
+    }
   },
   schemaOptions
 );

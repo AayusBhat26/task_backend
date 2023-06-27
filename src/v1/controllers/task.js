@@ -1,6 +1,17 @@
 const Task = require("../models/task");
 const Section = require("../models/sections");
-
+exports.getOne =async(req,res)=>{
+  const {taskId}=req.body;
+  try {
+    const oneTask = await Task.findById(taskId);
+    return res.status(201).json({
+      completed:oneTask, 
+      message:'Task found successfully', 
+    })
+  } catch (error) {
+    
+  }
+}
 exports.create = async (req, res) => {
   const { sectionId } = req.body;
   try {

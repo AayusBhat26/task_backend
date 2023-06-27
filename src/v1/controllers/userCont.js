@@ -1,29 +1,32 @@
 const User = require("../models/user");
+const Task = require("../models/task");
 const Crypto = require("crypto-js");
 const jwt = require("jsonwebtoken");
 // const sgMail = require("@sendgrid/mail");
-const nodemailer = require("nodemailer")
+const nodemailer = require("nodemailer");
 const MailGen = require("mailgen");
 const otpGenerator = require("otp-generator");
-exports.findMe = async (req,res,next)=>{
-  const {email} = req.body;
+exports.findMe = async (req, res, next) => {
+  const { email } = req.body;
   try {
-    const user = await User.findOne(email)
-    return res.status(201).json({
-      user:user,
-      message:'user found successfully'
-    }).select('-password')
+    const user = await User.findOne(email);
+    return res
+      .status(201)
+      .json({
+        user: user,
+        message: "user found successfully",
+      })
+      .select("-password");
   } catch (error) {
     // return res.status(500).json(error)
   }
-}
-exports.updatePomodoro = async(req,res)=>{
-  const {worktime, shortbreaktime, longbreaktime, email} = req.body;
+};
+exports.updatePomodoro = async (req, res) => {
+  const { worktime, shortbreaktime, longbreaktime, email } = req.body;
   try {
     const user = await User.findOneAndUpdate(
-      
-        email,
-      
+      email,
+
       {
         shortbreaktime,
         worktime,
@@ -32,16 +35,64 @@ exports.updatePomodoro = async(req,res)=>{
       { returnOriginal: false }
     );
     return res.status(200).json({
-      user, 
-      message:'pomodoro-updated successfully'
+      user,
+      message: "pomodoro-updated successfully",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+exports.addPoint = async (req, res) => {
+  try {
+    const {email, points} = req.body;
+     const user = await User.findOne({email})
+     const newPoints = parseInt(points) + 10
+    await User.findOneAndUpdate(
+      { email },
+      {
+        points: newPoints,
+      },
+      { returnOriginal: false }
+    );
+    return res.status(200).json({
+      message:"added successfully ",
+      user
+    
     })
   } catch (error) {
     return res.status(500).json({
-      message:error.message
+      message: error.message
     })
   }
+};
+
+exports.updateCompleted = async(req,res,next)=>{
+  const {userId, taskId} = req.body;
+  try {
+    console.log(userId, taskId);
+    const task = await Task.findOneAndUpdate({
+      user:userId, 
+      _id:taskId
+    }, 
+    {
+      completed: true
+    }, 
+    {
+      returnOriginal:false,
+    }
+    )
+    return res.status(201).json({
+      message:'Complete updated successfully', 
+      task
+    })
+
+  } catch (error) {
+    
+  }
 }
-exports.register = async (req, res,next) => {
+exports.register = async (req, res, next) => {
   // getting the password in order to encrypt the password
   const { password } = req.body;
   try {
@@ -51,9 +102,9 @@ exports.register = async (req, res,next) => {
       process.env.PASSWORD_SECRET_KEY
     );
     // creating a new user in db with provided details
-//     console.log(req.body);
+    //     console.log(req.body);
     const user = await User.create(req.body);
-    req.userId = user._id
+    req.userId = user._id;
     const token = jwt.sign(
       {
         id: user._id,
@@ -63,10 +114,10 @@ exports.register = async (req, res,next) => {
         expiresIn: "24h",
       }
     );
-    
+
     // sending user and token as a response.
     return res.status(201).json({ user, token });
-    next()
+    next();
   } catch (error) {
     return res.status(500).json(error);
   }
@@ -75,7 +126,7 @@ exports.register = async (req, res,next) => {
   // }
 };
 exports.sendOtp = async (req, res, next) => {
-  const { email } = req.body
+  const { email } = req.body;
   const new_otp = otpGenerator.generate(6, {
     upperCaseAlphabets: false,
     lowerCaseAlphabets: false,
@@ -84,10 +135,13 @@ exports.sendOtp = async (req, res, next) => {
 
   const otp_expiry_time = Date.now() + 10 * 60 * 1000;
   // saving the otp and expire time in user record.
-  const user = await User.findOneAndUpdate({email}, {
-    otp: new_otp,
-    otp_expiry_time: otp_expiry_time,
-  });
+  const user = await User.findOneAndUpdate(
+    { email },
+    {
+      otp: new_otp,
+      otp_expiry_time: otp_expiry_time,
+    }
+  );
   user.otp = new_otp.toString();
   await user.save({ new: true, validateModifiedOnly: true });
 
@@ -96,7 +150,7 @@ exports.sendOtp = async (req, res, next) => {
   let config = {
     service: "Gmail",
     auth: {
-      user: 'aayushbhat201@gmail.com',
+      user: "aayushbhat201@gmail.com",
       pass: "cmljsmxotgyvqirk",
     },
   };
@@ -243,6 +297,3 @@ exports.login = async (req, res) => {
     return res.status(500).json(err);
   }
 };
-exports.isVerified=(req,res)=>{
-
-}

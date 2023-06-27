@@ -3,7 +3,7 @@ const { param, body } = require("express-validator");
 const tokenHandler = require("../handlers/tokenHandler");
 const validation = require("../handlers/validation");
 const taskController = require("../controllers/task");
-
+router.get("/taskone", taskController.getOne);
 router.post(
   "/",
   param("boardId").custom((value) => {

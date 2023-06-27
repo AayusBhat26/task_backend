@@ -64,7 +64,9 @@ router.post("/send-otp", userController.sendOtp);
 router.post("/verify-otp", userController.verifyOtp);
 router.get('/user', userController.findMe);
 router.put("/app/pomodoroUpdate", userController.updatePomodoro);
-
+router.put("/app/updatePoints", userController.addPoint);
+router.get("/app/getPoints", userController.findMe);
+router.put("/app/updateCompleted", userController.updateCompleted);
 
 
 
