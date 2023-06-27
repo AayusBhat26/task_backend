@@ -45,6 +45,22 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    current: {
+      type: Number,
+      default: 1500,
+    },
+    worktime: {
+      type: Number,
+      default: 1500,
+    },
+    shortbreaktime: {
+      type: Number,
+      default: 300,
+    },
+    longbreaktime: {
+      type: Number,
+      default: 600,
+    },
   },
   schemaOptions
 );

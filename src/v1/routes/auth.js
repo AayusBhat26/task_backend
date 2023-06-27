@@ -62,6 +62,8 @@ router.post("/verify-token", tokenHandler.verifyToken, (req, res) => {
 
 router.post("/send-otp", userController.sendOtp);
 router.post("/verify-otp", userController.verifyOtp);
+router.get('/user', userController.findMe);
+router.put("/app/pomodoroUpdate", userController.updatePomodoro);
 
 
 

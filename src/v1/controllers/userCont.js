@@ -5,7 +5,42 @@ const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer")
 const MailGen = require("mailgen");
 const otpGenerator = require("otp-generator");
-
+exports.findMe = async (req,res,next)=>{
+  const {email} = req.body;
+  try {
+    const user = await User.findOne(email)
+    return res.status(201).json({
+      user:user,
+      message:'user found successfully'
+    }).select('-password')
+  } catch (error) {
+    // return res.status(500).json(error)
+  }
+}
+exports.updatePomodoro = async(req,res)=>{
+  const {worktime, shortbreaktime, longbreaktime, email} = req.body;
+  try {
+    const user = await User.findOneAndUpdate(
+      
+        email,
+      
+      {
+        shortbreaktime,
+        worktime,
+        longbreaktime,
+      },
+      { returnOriginal: false }
+    );
+    return res.status(200).json({
+      user, 
+      message:'pomodoro-updated successfully'
+    })
+  } catch (error) {
+    return res.status(500).json({
+      message:error.message
+    })
+  }
+}
 exports.register = async (req, res,next) => {
   // getting the password in order to encrypt the password
   const { password } = req.body;
