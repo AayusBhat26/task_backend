@@ -27,14 +27,6 @@ const userSchema = new mongoose.Schema(
       required: true,
       select: false,
     },
-    points: {
-      type: Number,
-      default: 0,
-    },
-    level: {
-      type: Number,
-      default: 0,
-    },
     otp: {
       type: Number,
     },
@@ -45,26 +37,6 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    current: {
-      type: Number,
-      default: 1500,
-    },
-    worktime: {
-      type: Number,
-      default: 1500,
-    },
-    shortbreaktime: {
-      type: Number,
-      default: 300,
-    },
-    longbreaktime: {
-      type: Number,
-      default: 600,
-    },
-    points:{
-      type: Number,
-      default: 0,
-    }
   },
   schemaOptions
 );
@@ -73,22 +45,5 @@ userSchema.methods.correctOtp = async function (candidateOtp, userOtp) {
   // return await crypto.(candidateOtp, userOtp);
   return candidateOtp==userOtp
 };
-// userSchema.methods.createPasswordResetToken = function () {
-//   const resetToken = crypto.randomBytes(32).toString("hex");
-//   this.passwordResetToken = crypto
-//     .createHash("sha256")
-//     .update(resetToken)
-//     .digest("hex");
-//   this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
-//   return resetToken;
-// };
-// userSchema.methods.changePasswordAfter = async function (timestamp) {
-//   if (this.passwordChangedAt) {
-//     const changedTimeStamp = parseInt(this.passwordChangedAt.getTime() / 1000);
-//     return timestamp > changedTimeStamp;
-//   }
 
-//   // FALSE MEANS NOT CHANGED
-//   return false;
-// };
 module.exports = mongoose.model("User",userSchema);
