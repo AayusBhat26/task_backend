@@ -6,24 +6,24 @@ const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const MailGen = require("mailgen");
 const otpGenerator = require("otp-generator");
-exports.findMe = async (req, res, next) => {
+
+exports.findMe = async (req, res) => {
   const { email } = req.body;
+  console.log(email);
   try {
     const user = await User.findOne(email);
-    return res
-      .status(201)
-      .json({
-        user: user,
-        message: "user found successfully",
+    return res.status(201).json({
+        user,
       })
-      .select("-password");
   } catch (error) {
-    // return res.status(500).json(error)
+    // console.log("this is error message: " + error.message);
+    return res.status(500).json(error);
   }
 };
 exports.register = async (req, res, next) => {
   // getting the password in order to encrypt the password
   const { password } = req.body;
+  console.log(password);
   try {
     // providing the password and password secret token to encrypt the password
     req.body.password = Crypto.AES.encrypt(
@@ -31,7 +31,7 @@ exports.register = async (req, res, next) => {
       process.env.PASSWORD_SECRET_KEY
     );
     // creating a new user in db with provided details
-    //     console.log(req.body);
+        console.log(req.body);
     const user = await User.create(req.body);
     req.userId = user._id;
     const token = jwt.sign(
@@ -48,11 +48,9 @@ exports.register = async (req, res, next) => {
     return res.status(201).json({ user, token });
     next();
   } catch (error) {
+    console.log(error.message);
     return res.status(500).json(error);
   }
-  // finally{
-  //   window.location.href = "/auth/verifyOtp"
-  // }
 };
 exports.sendOtp = async (req, res, next) => {
   const { email } = req.body;
