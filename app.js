@@ -8,8 +8,7 @@ const app = express();
 app.use(
   cors({
     origin: [
-      "https://task-frontend-aayush-kumar-bhats-projects.vercel.app/",
-    ],
+      "https://task-frontend-pearl.vercel.app"],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
