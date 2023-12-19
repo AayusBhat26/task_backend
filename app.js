@@ -5,7 +5,13 @@ const logger = require('morgan');
 const cors = require('cors')
 // const fileRoute = require("./src/v1/routes/file");
 const app = express();
-app.use(cors());
+app.use(
+  cors({
+    origin: ["https://task-backend-mauve.vercel.app/"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
