@@ -6,12 +6,7 @@ const cors = require('cors')
 // const fileRoute = require("./src/v1/routes/file");
 const app = express();
 app.use(
-  cors({
-    origin: [
-      "https://task-frontend-pearl.vercel.app/"],
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true,
-  })
+  cors()
 );
 app.use(logger('dev'));
 app.use(express.json());
