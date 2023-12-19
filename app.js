@@ -7,7 +7,9 @@ const cors = require('cors')
 const app = express();
 app.use(
   cors({
-    origin: ["https://task-backend-mauve.vercel.app/"],
+    origin: [
+      "https://task-frontend-aayush-kumar-bhats-projects.vercel.app/",
+    ],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
