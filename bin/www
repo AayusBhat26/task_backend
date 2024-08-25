@@ -9,7 +9,7 @@ const debug = require('debug')('server:server');
 const http = require('http');
 const dotenv = require("dotenv");
 const mongoose = require('mongoose');
-dotenv.config()
+dotenv.config();
 /**
  * Get port from environment and store in Express.
  */

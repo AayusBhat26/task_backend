@@ -13,8 +13,8 @@ exports.findMe = async (req, res) => {
   try {
     const user = await User.findOne(email);
     return res.status(201).json({
-        user,
-      })
+      user,
+    });
   } catch (error) {
     // console.log("this is error message: " + error.message);
     return res.status(500).json(error);
@@ -31,7 +31,7 @@ exports.register = async (req, res, next) => {
       process.env.PASSWORD_SECRET_KEY
     );
     // creating a new user in db with provided details
-        console.log(req.body);
+    console.log(req.body);
     const user = await User.create(req.body);
     req.userId = user._id;
     const token = jwt.sign(
@@ -43,10 +43,11 @@ exports.register = async (req, res, next) => {
         expiresIn: "24h",
       }
     );
+    console.log(token);
 
     // sending user and token as a response.
-    return res.status(201).json({ user, token });
-    next();
+    console.log(res.status(201).json({ user, token }));
+    return res.status(200).json({ user, token });
   } catch (error) {
     console.log(error.message);
     return res.status(500).json(error);
